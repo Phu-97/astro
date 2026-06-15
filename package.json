@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^7.1.1",
-    "@astrojs/cloudflare": "^10.4.2",
+    "@astrojs/cloudflare": "^7.7.1",
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
