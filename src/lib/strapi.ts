@@ -1,11 +1,17 @@
 export async function fetchAPI(path: string, query = "") {
   const url = `${import.meta.env.PUBLIC_STRAPI_URL}/api/${path}${query ? `?${query}` : ""}`;
 
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error(`Strapi API Error: ${response.status}`);
+    if (!response.ok) {
+      console.warn(`Strapi API Error: ${response.status} for ${path}`);
+      return { data: null };
+    }
+
+    return response.json();
+  } catch (error) {
+    console.warn(`Strapi fetch failed for ${path}:`, error);
+    return { data: null };
   }
-
-  return response.json();
 }
