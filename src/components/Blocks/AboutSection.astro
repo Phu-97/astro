@@ -1,0 +1,43 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingConponent, Button, Image } = data;
+const { Text } = Button;
+const { Heading, Description } = HeadingConponent;
+const { url, alternativeText } = Image;
+---
+
+<section
+  class="py-section-gap-lg px-grid-margin-desktop max-w-[1440px] mx-auto overflow-hidden"
+>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+    <div class="md:col-span-5 reveal-up">
+      <h2
+        class="font-display-xl text-headline-lg-mobile md:text-headline-lg text-tertiary mb-stack-lg italic"
+      >
+        {Heading}
+      </h2>
+      <p
+        class="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg leading-relaxed"
+      >
+        {Description.replace(/<[^>]*>/g, "")}
+      </p>
+      <a
+        class="font-label-caps text-label-caps text-tertiary border-b border-tertiary pb-2 hover:opacity-60 transition-opacity duration-300"
+        href="#"
+      >
+        {Text}
+      </a>
+    </div>
+    <div
+      class="md:col-start-7 md:col-span-6 relative aspect-[4/5] bg-surface-container reveal-up"
+    >
+      <img
+        class="w-full h-full object-cover"
+        data-alt="A minimalist architectural detail of a sunlit corner in a modern luxury home, featuring a sculptural marble pedestal and a single ceramic vase against a soft beige wall. The lighting is ethereal and soft, emphasizing the clean lines and premium textures of the space."
+        src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+      />
+      <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-taupe/20 -z-10">
+      </div>
+    </div>
+  </div>
+</section>

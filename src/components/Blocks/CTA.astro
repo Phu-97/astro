@@ -1,0 +1,27 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingComponent, Button } = data;
+const { Heading, Description } = HeadingComponent;
+---
+
+<section
+  class="bg-charcoal text-ivory py-section-gap-lg px-grid-margin-desktop text-center overflow-hidden"
+>
+  <div class="max-w-4xl mx-auto reveal-up">
+    <h2
+      class="font-display-xl text-display-xl-mobile md:text-headline-lg mb-stack-lg italic"
+    >
+      {Heading}
+    </h2>
+    <blockquote
+      class="font-body-lg text-body-lg text-ivory/70 mb-section-gap-md max-w-2xl mx-auto"
+      set:html={Description}
+    />
+
+    <button
+      class="bg-ivory text-tertiary px-12 py-5 font-label-caps text-label-caps tracking-[0.3em] hover:bg-taupe transition-colors duration-500"
+    >
+      {Button.Text}
+    </button>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+const { data } = Astro.props;
+
+const { SubText, Heading, Buttons, Background } = data;
+
+// const SubText=data.SubText;
+// const Heading=data.Heading;
+// const Buttons=data.Buttons;
+// const Background=data.Background;
+// console.log(Background);
+const { url, alternativeText } = Background;
+---
+
+<section class="relative h-[100vh] w-full overflow-hidden hero-banner">
+  <img
+    alt={alternativeText || "Hero Banner Background"}
+    class="absolute inset-0 w-full h-full object-cover"
+    src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+  />
+  <div class="absolute inset-0 hero-gradient"></div>
+  <div
+    class="absolute inset-0 flex flex-col justify-end px-grid-margin-desktop pb-section-gap-md max-w-[1440px] mx-auto"
+  >
+    <div class="max-w-4xl reveal-up active">
+      <span
+        class="font-label-caps text-label-caps text-ivory/80 mb-stack-sm block"
+        >{SubText}</span
+      >
+      <h1
+        class="font-display-xl text-display-xl-mobile md:text-display-xl text-ivory mb-stack-lg leading-tight"
+        set:html={Heading}
+      />
+      <div class="flex items-center gap-stack-lg">
+        <button
+          class="bg-ivory text-tertiary px-stack-lg py-4 font-label-caps text-label-caps tracking-widest hover:bg-taupe transition-colors duration-500"
+        >
+          {Buttons[0].Text}
+        </button>
+        <a
+          class="font-display-xl italic text-headline-md text-ivory border-b border-ivory/30 pb-1 hover:border-ivory transition-all duration-500"
+          href="#"
+        >
+          {Buttons[1].Text}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

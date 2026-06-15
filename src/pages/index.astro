@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+import HeroBanner from "../components/Blocks/HeroBanner.astro";
+import AboutSection from "../components/Blocks/AboutSection.astro";
+import FeaturedCurations from "../components/Blocks/FeaturedCurations.astro";
+import Slogent from "../components/Blocks/Slogent.astro";
+import Gallery from "../components/Blocks/Gallery.astro";
+import CTA from "../components/Blocks/CTA.astro";
+import { fetchAPI } from "../lib/strapi";
+import { homeQuery } from "../lib/queries/home";
+import "../styles/collection.css";
+
+const data = await fetchAPI("home", homeQuery);
+const blocks = data.data.Blocks;
+
+// Tách SEO ra riêng vì nó không render trên UI
+const seoBlock = blocks.find((b) => b.__component === "shared.seo");
+
+// Map component type → Astro component
+const componentMap = {
+  "block.hero-banner": HeroBanner,
+  "block.about-section": AboutSection,
+  "block.featured-curations": FeaturedCurations,
+  "block.slogent": Slogent,
+  "block.gallery": Gallery,
+  "block.cta": CTA,
+};
+
+// Lọc bỏ SEO, giữ nguyên thứ tự từ Strapi
+const renderableBlocks = blocks.filter((b) => b.__component !== "shared.seo");
+---
+
+<Layout
+  title={seoBlock?.metaTitle ?? ""}
+  description={seoBlock?.metaDescription ?? ""}
+>
+  {
+    renderableBlocks.map((block) => {
+      const Component = componentMap[block.__component];
+      return Component ? <Component data={block} /> : null;
+    })
+  }
+</Layout>

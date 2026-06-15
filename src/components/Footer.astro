@@ -1,0 +1,90 @@
+---
+const strapiBase = "http://localhost:1337";
+const { title, description } = Astro.props;
+const res = await fetch(
+  `${strapiBase}/api/global?populate[defaultSeo][populate]=shareImage&populate[Blocks][populate]=*`,
+);
+const json = await res.json();
+const footerBlock = json.data?.Blocks?.find(
+  (b: any) => b.__component === "block.footer",
+);
+const logo = footerBlock?.Logo;
+const menu = footerBlock?.Menu ?? [];
+const social = footerBlock.Social ?? [];
+const copyright = footerBlock.CopyRight ?? [];
+---
+
+<footer
+  class="bg-surface-container-low w-full mt-section-gap-lg border-t border-taupe/20"
+>
+  <div
+    class="flex flex-col md:flex-row justify-between items-center px-grid-margin-desktop py-stack-lg gap-stack-md max-w-[1440px] mx-auto"
+  >
+    <div class="flex flex-col items-center md:items-start gap-stack-sm">
+      <a
+        class="font-display-xl text-headline-md tracking-tighter text-tertiary"
+        href={logo?.Link ?? "/"}
+      >
+        {logo?.Logo ?? "BlissHaven"}
+      </a>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        {copyright}
+      </p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-stack-lg">
+      {
+        menu.map((item: any) => (
+          <a
+            class="font-body-md text-body-md text-on-surface-variant hover:text-tertiary hover:underline decoration-taupe underline-offset-4 transition-all duration-300"
+            href={item.URL ?? item.link ?? "#"}
+          >
+            {item.Text}
+          </a>
+        ))
+      }
+    </div>
+    <div class="flex gap-stack-md">
+      {
+        social.map((btn: any) => (
+          <a
+            href={btn.Link ?? "#"}
+            class="w-10 h-10 border border-taupe/30 flex items-center justify-center hover:bg-tertiary hover:text-ivory transition-colors duration-300"
+          >
+            <span class="material-symbols-outlined">
+              {btn.Text === "language" ? "share" : "language"}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>
+<script>
+  // Reveal on scroll logic
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px",
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll(".reveal-up").forEach((el) => observer.observe(el));
+
+  // Smooth header scroll effect
+  window.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    if (window.scrollY > 50) {
+      header.classList.add("py-stack-sm");
+      header.classList.remove("py-stack-md");
+    } else {
+      header.classList.add("py-stack-md");
+      header.classList.remove("py-stack-sm");
+    }
+  });
+</script>

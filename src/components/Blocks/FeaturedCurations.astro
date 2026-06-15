@@ -1,0 +1,78 @@
+---
+const { data } = Astro.props;
+
+const { Heading: HeadingConponent, Cards, Description = [] } = data;
+const { Heading } = HeadingConponent;
+
+const firstCard = Cards[0];
+const otherCards = Cards.slice(1);
+---
+
+<section
+  class="bg-surface-container-low py-section-gap-lg px-grid-margin-desktop"
+>
+  <div class="max-w-[1440px] mx-auto">
+    <div class="flex justify-between items-end mb-section-gap-md">
+      <h2 class="font-display-xl text-headline-lg text-tertiary">
+        {Heading}
+      </h2>
+
+      <p class="font-label-caps text-label-caps text-on-surface-variant">
+        {String(Cards.length).padStart(2, "0")} SERIES
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+      {/* Card đầu */}
+      {
+        firstCard && (
+          <div class="md:col-span-8 group cursor-pointer reveal-up">
+            <div class="relative aspect-[16/9] overflow-hidden">
+              <img
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src={`${import.meta.env.PUBLIC_STRAPI_URL}${firstCard?.Image?.url}`}
+                alt={firstCard?.Image?.alternativeText || firstCard?.Title}
+              />
+            </div>
+
+            <div class="mt-stack-md flex justify-between items-center">
+              <div>
+                <h3 class="font-display-xl text-headline-md">
+                  {firstCard.Title}
+                </h3>
+
+                <p class="font-body-md text-on-surface-variant">
+                  <Fragment set:html={firstCard.Description} />
+                </p>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {/* Các card còn lại */}
+      <div class="md:col-span-4 flex flex-col gap-gutter">
+        {
+          otherCards.map((card, index) => (
+            <div
+              class="group cursor-pointer reveal-up"
+              style={`transition-delay:${index * 200}ms`}
+            >
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={`${import.meta.env.PUBLIC_STRAPI_URL}${card?.Image?.url}`}
+                  alt={card?.Image?.alternativeText || card?.Title}
+                />
+              </div>
+
+              <div class="mt-stack-sm">
+                <h3 class="font-headline-md text-headline-md">{card.Title}</h3>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

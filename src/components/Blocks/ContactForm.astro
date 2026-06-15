@@ -1,0 +1,94 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingConponent } = data;
+
+const { Heading, Description } = HeadingConponent;
+---
+
+<section
+  class="mt-section-gap-lg px-grid-margin-desktop max-w-[1440px] mx-auto mb-section-gap-lg text-center"
+>
+  <div class="max-w-2xl mx-auto border-t border-taupe/20 pt-24">
+    <h2 class="font-display-xl text-headline-lg mb-6">
+      {Heading.replace(/<[^>]*>/g, "")}
+    </h2>
+    <p class="font-body-lg text-body-lg text-on-surface-variant mb-12">
+      {Description.replace(/<[^>]*>/g, "")}
+    </p>
+
+    <form
+      id="contact-form"
+      class="flex flex-col md:flex-row gap-4 max-w-md mx-auto"
+      novalidate
+    >
+      <div class="flex-1 relative">
+        <label
+          class="absolute -top-6 left-0 font-label-caps text-label-caps uppercase text-on-surface-variant"
+          >Your Email</label
+        >
+        <input
+          id="email-input"
+          name="email"
+          class="w-full bg-transparent border-0 border-b border-charcoal py-3 focus:ring-0 focus:border-taupe transition-colors font-body-md"
+          placeholder="email@address.com"
+          type="email"
+          required
+        />
+      </div>
+      <button
+        id="submit-btn"
+        type="submit"
+        class="bg-charcoal text-ivory px-10 py-3 font-label-caps text-label-caps tracking-widest uppercase hover:bg-taupe transition-colors duration-500 disabled:opacity-50"
+        >Subscribe</button
+      >
+    </form>
+
+    <!-- Feedback -->
+    <p id="msg-error" class="hidden mt-4 text-sm text-red-500"></p>
+    <p id="msg-success" class="hidden mt-4 text-sm text-green-700">
+      Thank you! We will contact you soon.
+    </p>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement;
+  const input = document.getElementById("email-input") as HTMLInputElement;
+  const btn = document.getElementById("submit-btn") as HTMLButtonElement;
+  const msgErr = document.getElementById("msg-error")!;
+  const msgOk = document.getElementById("msg-success")!;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msgErr.classList.add("hidden");
+    msgOk.classList.add("hidden");
+
+    const email = input.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msgErr.textContent = "Please enter a valid email address.";
+      msgErr.classList.remove("hidden");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message ?? "Server error.");
+      msgOk.classList.remove("hidden");
+      form.reset();
+    } catch (err: any) {
+      msgErr.textContent = err.message ?? "Unable to send. Try again later.";
+      msgErr.classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Subscribe";
+    }
+  });
+</script>

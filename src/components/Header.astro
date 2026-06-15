@@ -1,0 +1,26 @@
+---
+import { SITE_TITLE } from "../consts";
+import Navbar from "../layouts/Navbar.astro";
+const strapiBase = "http://localhost:1337";
+const { title, description } = Astro.props;
+const res = await fetch(
+  `${strapiBase}/api/global?populate[defaultSeo][populate]=shareImage&populate[Blocks][populate]=*`,
+);
+const json = await res.json();
+const headerBlock = json.data?.Blocks?.find(
+  (b: any) => b.__component === "block.header",
+);
+const logo = headerBlock?.Logo;
+const menu = headerBlock?.Menu ?? [];
+const button = headerBlock.Button ?? [];
+---
+
+<header
+  class="fixed top-0 w-full z-50 bg-ivory/90 backdrop-blur-md border-b border-outline-variant/30"
+>
+  <nav
+    class="flex justify-between items-center px-grid-margin-desktop py-stack-md max-w-[1440px] mx-auto"
+  >
+    <Navbar logo={logo} menu={menu} button={button} />
+  </nav>
+</header>

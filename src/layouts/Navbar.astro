@@ -1,0 +1,43 @@
+---
+const { logo, menu, button = [] } = Astro.props;
+---
+
+<div class="flex items-center gap-stack-lg">
+  <a
+    class="font-display-xl text-headline-md tracking-tighter text-tertiary"
+    href={logo?.Link ?? "/"}
+  >
+    {logo?.Logo ?? "BlissHaven"}
+  </a>
+</div>
+
+<div class="hidden md:flex items-center gap-10">
+  {
+    menu.map((item: any) => (
+      <a
+        class="font-body-md text-body-md tracking-widest uppercase text-on-surface-variant hover:text-tertiary transition-colors duration-500"
+        href={item.Link ?? item.URL ?? item.link ?? "#"}
+      >
+        {item.Text}
+      </a>
+    ))
+  }
+</div>
+
+<div class="flex items-center gap-stack-md">
+  {
+    button.map((btn: any) => (
+      <a
+        href={btn.Link ?? "#"}
+        class="p-2 hover:opacity-70 transition-opacity duration-500"
+      >
+        <span class="material-symbols-outlined">
+          {btn.Text === "Cart" ? "shopping_bag" : "person"}
+        </span>
+      </a>
+    ))
+  }
+  <button class="md:hidden p-2">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+</div>

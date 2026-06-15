@@ -1,0 +1,52 @@
+---
+import Layout from "../layouts/Layout.astro";
+import BannerStory from "../components/Blocks/BannerStory.astro";
+import CTAShowroom from "../components/Blocks/CTAShowroom.astro";
+import Slogent from "../components/Blocks/SlogentStory.astro";
+import Materiality from "../components/Blocks/Materiality.astro";
+import Heritage from "../components/Blocks/Heritage.astro";
+import StructuralPoise from "../components/Blocks/StructuralPoise.astro";
+import { fetchAPI } from "../lib/strapi";
+import { ourStoryQuery } from "../lib/queries/ourStory";
+
+const data = await fetchAPI("our-story", ourStoryQuery);
+const blocks = data.data.Blocks;
+
+const seoBlock = blocks.find((b) => b.__component === "shared.seo");
+
+// Đếm số lần xuất hiện của mỗi type để phân biệt block trùng type
+const typeCountMap: Record<string, number> = {};
+
+const renderableBlocks = blocks
+  .filter((b) => b.__component !== "shared.seo")
+  .map((block) => {
+    const type = block.__component;
+    typeCountMap[type] = (typeCountMap[type] ?? 0) + 1;
+    return { ...block, _index: typeCountMap[type] - 1 }; // _index: 0, 1, 2...
+  });
+
+// Map: [type, index] → Component
+// index = 0 là lần xuất hiện đầu tiên, 1 là lần thứ hai...
+const componentMap: Record<string, Record<number, any>> = {
+  "block.banner-story": {
+    0: BannerStory, // lần 1 → BannerStory
+    1: Heritage, // lần 2 → Heritage
+  },
+  "block.about-section": { 0: Materiality },
+  "block.slogent": { 0: Slogent },
+  "block.structural": { 0: StructuralPoise },
+  "block.cta-showroom": { 0: CTAShowroom },
+};
+---
+
+<Layout
+  title={seoBlock?.metaTitle ?? ""}
+  description={seoBlock?.metaDescription ?? ""}
+>
+  {
+    renderableBlocks.map((block) => {
+      const Component = componentMap[block.__component]?.[block._index];
+      return Component ? <Component data={block} /> : null;
+    })
+  }
+</Layout>

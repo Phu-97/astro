@@ -1,0 +1,34 @@
+.bg-surface-container-low.m-100 {
+  margin-top: 100px;
+  > div {
+    .gap-gutter {
+      .md\:col-start-2 {
+        grid-column: span 5 / span 5 !important;
+        h2 {
+          font-size: 80px;
+          line-height: 96px;
+          letter-spacing: -0.02em;
+          font-weight: 400;
+        }
+        .font-body-lg {
+          margin-bottom: 2.5rem;
+        }
+      }
+      .md\:col-start-7 {
+        grid-column: span 7 / span 7 !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+    }
+  }
+}
+input:focus-visible {
+  outline: 0;
+}
+input {
+  padding: 10px;
+}
+@media screen and (max-width: 767px) {
+  .hero-banner {
+    height: 30vh !important;
+  }
+}

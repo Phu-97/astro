@@ -1,0 +1,31 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingConponent, Image } = data;
+
+const { Heading, Description } = HeadingConponent;
+const { url, alternativeText } = Image;
+---
+
+<section class="px-grid-margin-desktop mb-section-gap-lg">
+  <div class="max-w-[1440px] mx-auto">
+    <div class="flex flex-col md:flex-row gap-gutter">
+      <div class="md:w-3/5 image-container overflow-hidden">
+        <img
+          class="w-full aspect-video object-cover image-reveal"
+          data-alt={alternativeText}
+          src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+        />
+      </div>
+      <div class="md:w-2/5 flex flex-col justify-center py-stack-lg">
+        <h2
+          class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-tertiary mb-stack-lg"
+          set:html={Heading}
+        />
+        <p
+          class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
+          set:html={Description}
+        />
+      </div>
+    </div>
+  </div>
+</section>

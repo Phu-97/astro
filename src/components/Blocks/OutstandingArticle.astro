@@ -1,0 +1,178 @@
+---
+
+interface StrapiImage {
+  url: string;
+  alternativeText?: string;
+  formats?: {
+    large?: { url: string };
+    medium?: { url: string };
+  };
+}
+
+interface Article {
+  id: number;
+  documentId: string;
+  title: string;
+  excerpt: string;
+  slug: string;
+  publishedAt: string;
+  cover: StrapiImage | null;
+  category: { name: string } | null;
+}
+
+// ── Config ────────────────────────────────────────────────────────────────────
+const STRAPI_URL  = import.meta.env.STRAPI_URL  ?? "http://localhost:1337";
+const STRAPI_TOKEN = import.meta.env.STRAPI_TOKEN ?? "";
+
+const headers: Record<string, string> = {
+  "Content-Type": "application/json",
+};
+if (STRAPI_TOKEN) headers["Authorization"] = `Bearer ${STRAPI_TOKEN}`;
+
+// ── Fetch ─────────────────────────────────────────────────────────────────────
+// Strapi v5 REST API — populate cover & category
+const params = new URLSearchParams({
+  "populate[cover][fields][0]": "url",
+  "populate[cover][fields][1]": "alternativeText",
+  "populate[cover][fields][2]": "formats",
+  "populate[category][fields][0]": "name",
+  "sort[0]": "publishedAt:desc",
+  "pagination[pageSize]": "5",
+});
+
+let articles: Article[] = [];
+let fetchError = "";
+
+try {
+  const res = await fetch(
+    `${STRAPI_URL}/api/articles?${params.toString()}`,
+    { headers }
+  );
+
+  if (!res.ok) {
+    fetchError = `Strapi trả về ${res.status}: ${res.statusText}`;
+  } else {
+    const json = await res.json();
+    // Strapi v5: json.data là mảng object phẳng (không có .attributes)
+    articles = (json.data ?? []).map((item: any): Article => ({
+      id:          item.id,
+      documentId:  item.documentId,
+      title:       item.title       ?? "Untitled",
+      excerpt:     item.excerpt     ?? "",
+      slug:        item.slug        ?? String(item.id),
+      publishedAt: item.publishedAt ?? "",
+      cover:       item.cover       ?? null,
+      category:    item.category    ?? null,
+    }));
+  }
+} catch (err) {
+  fetchError = err instanceof Error ? err.message : String(err);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function imgSrc(cover: StrapiImage | null, size: "large" | "medium" = "large"): string {
+  if (!cover) return "/placeholder.jpg";
+  const fmt = cover.formats?.[size]?.url ?? cover.url;
+  // Strapi có thể trả về đường dẫn tương đối
+  return fmt.startsWith("http") ? fmt : `${STRAPI_URL}${fmt}`;
+}
+
+function formatDate(iso: string): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("vi-VN", {
+    day: "2-digit", month: "long", year: "numeric",
+  });
+}
+
+const [hero, ...allRest] = articles;
+const rest = allRest.slice(0, 2);
+---
+
+{fetchError && (
+  <p class="text-red-500 text-center py-8">
+    Không thể tải bài viết: {fetchError}
+  </p>
+)}
+
+{!fetchError && articles.length === 0 && (
+  <p class="text-center py-8 text-on-surface-variant">
+    Chưa có bài viết nào.
+  </p>
+)}
+
+{hero && (
+  <section class="mt-section-gap-lg px-grid-margin-desktop max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-section-gap-md">
+
+    <!-- ── Hero card ───────────────────────────────────────────────────── -->
+    <div class="group md:col-span-2">
+      <a href={`/articles/${hero.slug}`} class="block">
+        <div class="aspect-[16/7] bg-surface-container-low overflow-hidden relative mb-8">
+          <img
+            class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            src={imgSrc(hero.cover, "large")}
+            alt={hero.cover?.alternativeText ?? hero.title}
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-charcoal/10 flex items-end p-12">
+            <div class="text-ivory max-w-lg">
+              {hero.category && (
+                <span class="font-label-caps text-label-caps tracking-widest uppercase text-ivory/70 mb-3 block">
+                  {hero.category.name}
+                </span>
+              )}
+              <h3 class="font-display-xl text-headline-lg mb-4">
+                {hero.title}
+              </h3>
+              {hero.excerpt && (
+                <p class="font-body-md text-body-md opacity-90 mb-6 line-clamp-2">
+                  {hero.excerpt}
+                </p>
+              )}
+              <button class="bg-ivory text-charcoal px-8 py-3 font-label-caps text-label-caps tracking-widest uppercase hover:bg-taupe transition-colors duration-300">
+                View more
+              </button>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- ── Card nhỏ (rest) ────────────────────────────────────────────── -->
+    {rest.map((article) => (
+      <div class="group">
+        <a href={`/articles/${article.slug}`} class="block">
+          <div class="aspect-[4/5] bg-surface-container-low overflow-hidden relative mb-6">
+            <img
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src={imgSrc(article.cover, "medium")}
+              alt={article.cover?.alternativeText ?? article.title}
+              loading="lazy"
+            />
+            <!-- Hover overlay -->
+            <div class="absolute inset-0 bg-charcoal/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+              <span class="bg-ivory text-charcoal px-8 py-3 font-label-caps text-label-caps tracking-widest uppercase hover:bg-taupe transition-colors duration-300">
+                View more
+              </span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-headline-md text-headline-md mb-1 italic line-clamp-2">
+                {article.title}
+              </h3>
+              <p class="font-body-md text-on-surface-variant">
+                {article.category?.name && `${article.category.name} — `}
+                {formatDate(article.publishedAt)}
+              </p>
+            </div>
+            <span class="font-body-md text-tertiary border-b border-tertiary pb-0.5 hover:text-taupe hover:border-taupe transition-all duration-300 shrink-0 ml-4">
+              View more
+            </span>
+          </div>
+        </a>
+      </div>
+    ))}
+
+  </section>
+)}

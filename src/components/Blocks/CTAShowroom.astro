@@ -1,0 +1,44 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingComponent, Button, Text, SubText } = data;
+const subText = SubText?.Text;
+const { Heading, Description } = HeadingComponent;
+---
+
+<section
+  class="bg-charcoal text-ivory py-section-gap-lg px-grid-margin-desktop relative overflow-hidden"
+>
+  <!-- Decorative circle -->
+  <div
+    class="absolute top-0 right-0 w-96 h-96 bg-taupe/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
+  >
+  </div>
+  <div class="max-w-[1440px] mx-auto relative z-10 text-center">
+    <span
+      class="font-label-caps text-label-caps uppercase text-taupe/60 mb-stack-md block tracking-[0.3em]"
+    >
+      {subText}
+    </span>
+    <h2
+      class="font-display-xl text-display-xl-mobile md:text-display-xl mb-stack-lg"
+    >
+      {Heading}
+    </h2>
+    <p
+      class="font-body-lg text-body-lg max-w-2xl mx-auto mb-stack-lg opacity-80"
+      set:html={Description}
+    />
+    <div
+      class="flex flex-col md:flex-row gap-stack-md justify-center items-center mt-section-gap-md"
+    >
+      <a
+        class="bg-ivory text-charcoal px-12 py-4 font-label-caps text-label-caps uppercase tracking-widest hover:bg-taupe transition-colors duration-500 min-w-[240px]"
+        href="#">{Button[0].Text}</a
+      >
+      <a
+        class="border-b border-ivory pb-1 font-label-caps text-label-caps uppercase tracking-widest hover:text-taupe hover:border-taupe transition-all duration-300"
+        href="#">{Button[1].Text}</a
+      >
+    </div>
+  </div>
+</section>

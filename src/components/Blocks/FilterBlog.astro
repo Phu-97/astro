@@ -1,0 +1,177 @@
+---
+const STRAPI_URL = "http://localhost:1337";
+---
+
+<!-- Filter Bar -->
+<section class="px-grid-margin-desktop max-w-[1440px] mx-auto mb-12">
+  <div
+    class="flex flex-wrap items-center justify-between border-b border-taupe/20 pb-6 gap-6"
+  >
+    <div class="flex flex-wrap gap-10">
+      <!-- Category Dropdown -->
+      <div class="group relative">
+        <button
+          class="flex items-center gap-2 font-label-caps text-label-caps uppercase tracking-widest py-2"
+        >
+          Category
+          <span class="material-symbols-outlined text-[14px]">expand_more</span>
+        </button>
+        <div
+          id="category-menu"
+          class="absolute top-full left-0 bg-ivory shadow-xl min-w-[200px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 p-6 flex flex-col gap-3"
+        >
+          <button
+            data-slug="all"
+            class="filter-btn text-body-md font-body-md hover:text-taupe text-left font-semibold"
+            >All</button
+          >
+          <!-- filled dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="product-count"
+      class="text-body-md font-body-md text-on-surface-variant italic"
+    >
+      Loading…
+    </div>
+  </div>
+</section>
+
+<!-- Product Grid -->
+<section
+  id="product-grid"
+  class="px-grid-margin-desktop max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-gutter gap-y-section-gap-md"
+>
+  <!-- skeleton placeholders -->
+  {
+    Array.from({ length: 3 }).map(() => (
+      <div class="animate-pulse">
+        <div class="aspect-[4/5] bg-surface-container-low mb-6" />
+        <div class="h-4 bg-surface-container-low w-3/4 mb-2" />
+        <div class="h-3 bg-surface-container-low w-1/2" />
+      </div>
+    ))
+  }
+</section>
+
+<script define:vars={{ STRAPI_URL }}>
+  const grid = document.getElementById("product-grid");
+  const countEl = document.getElementById("product-count");
+  const categoryMenu = document.getElementById("category-menu");
+
+  // ─── Build a product card ───────────────────────────────────────────────
+  function buildCard(article) {
+    const imgUrl = article.cover?.url
+      ? `${STRAPI_URL}${article.cover.url}`
+      : null;
+    const div = document.createElement("div");
+    div.className = "group product-card";
+    div.dataset.category = article.category?.slug ?? "";
+
+    div.innerHTML = `
+      <div class="aspect-[4/5] bg-surface-container-low overflow-hidden relative mb-6">
+        ${
+          imgUrl
+            ? `<img
+               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+               src="${imgUrl}"
+               alt="${article.title ?? ""}"
+             />`
+            : ""
+        }
+        <div class="absolute inset-0 bg-charcoal/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+          <button class="bg-ivory text-charcoal px-8 py-3 font-label-caps text-label-caps tracking-widest uppercase hover:bg-taupe transition-colors duration-300">
+            View Details
+          </button>
+        </div>
+      </div>
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="font-headline-md text-headline-md mb-1 italic">${article.title ?? ""}</h3>
+          <p class="font-body-md text-on-surface-variant">${article.description ?? ""}</p>
+        </div>
+        <button class="font-body-md text-tertiary border-b border-tertiary pb-0.5 hover:text-taupe hover:border-taupe transition-all duration-300">
+          Inquire
+        </button>
+      </div>
+    `;
+    return div;
+  }
+
+  // ─── Fetch articles from Strapi ─────────────────────────────────────────
+  async function fetchArticles(categorySlug = null) {
+    const params = new URLSearchParams();
+    params.append("populate[0]", "cover");
+    params.append("populate[1]", "category");
+
+    if (categorySlug && categorySlug !== "all") {
+      params.append("filters[category][slug][$eq]", categorySlug);
+    }
+
+    const res = await fetch(`${STRAPI_URL}/api/articles?${params.toString()}`);
+    if (!res.ok) throw new Error(`Strapi error: ${res.status}`);
+    const json = await res.json();
+    return json.data ?? [];
+  }
+
+  // ─── Fetch categories & build filter buttons ────────────────────────────
+  async function fetchCategories() {
+    const res = await fetch(`${STRAPI_URL}/api/categories`);
+    if (!res.ok) return;
+    const json = await res.json();
+    const cats = json.data ?? [];
+
+    cats.forEach((cat) => {
+      const btn = document.createElement("button");
+      btn.dataset.slug = cat.slug;
+      btn.className =
+        "filter-btn text-body-md font-body-md hover:text-taupe text-left";
+      btn.textContent = cat.name;
+      categoryMenu.appendChild(btn);
+    });
+
+    // attach click listeners for ALL filter buttons (incl. "All")
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const slug = btn.dataset.slug;
+        setActiveFilter(slug);
+        await renderGrid(slug === "all" ? null : slug);
+      });
+    });
+  }
+
+  // ─── Highlight active filter ────────────────────────────────────────────
+  function setActiveFilter(slug) {
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.classList.toggle("font-semibold", btn.dataset.slug === slug);
+    });
+  }
+
+  // ─── Render grid ────────────────────────────────────────────────────────
+  async function renderGrid(categorySlug = null) {
+    // show loading state
+    grid.innerHTML = "";
+    countEl.textContent = "Loading…";
+
+    try {
+      const articles = await fetchArticles(categorySlug);
+
+      grid.innerHTML = "";
+      articles.forEach((a) => grid.appendChild(buildCard(a)));
+
+      const n = articles.length;
+      countEl.textContent = `Showing ${n} Artifact${n !== 1 ? "s" : ""}`;
+    } catch (err) {
+      console.error(err);
+      countEl.textContent = "Failed to load";
+      grid.innerHTML = `<p class="col-span-full text-on-surface-variant">Could not load products.</p>`;
+    }
+  }
+
+  // ─── Init ────────────────────────────────────────────────────────────────
+  (async () => {
+    await Promise.all([fetchCategories(), renderGrid()]);
+  })();
+</script>

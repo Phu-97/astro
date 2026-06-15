@@ -1,0 +1,24 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingConponent = [] } = data;
+
+// lấy phần tử đầu tiên
+const item = HeadingConponent?.[0];
+
+const Heading = item?.Heading;
+const Description = item?.Description;
+---
+
+<section class="py-section-gap-lg px-grid-margin-desktop text-center">
+  <div class="max-w-4xl mx-auto">
+    <blockquote
+      class="font-display-xl text-headline-lg-mobile md:text-headline-lg italic text-tertiary leading-tight"
+    >
+      {Heading}
+    </blockquote>
+    <cite
+      class="mt-stack-lg block font-label-caps text-label-caps uppercase text-on-surface-variant tracking-widest"
+      set:html={Description}
+    />
+  </div>
+</section>

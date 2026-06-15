@@ -1,0 +1,36 @@
+---
+const { data } = Astro.props;
+const { Heading: HeadingConponent, Image } = data;
+
+const { Heading, Description, SubText } = HeadingConponent;
+
+const { url, alternativeText } = Image;
+---
+
+<section class="px-grid-margin-desktop mb-section-gap-lg">
+  <div class="max-w-[1440px] mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-end">
+      <div class="md:col-span-7 mb-stack-lg md:mb-0">
+        <span
+          class="font-label-caps text-label-caps uppercase text-on-surface-variant mb-stack-md block letter-spacing-wide"
+          set:html={SubText}
+        />
+        <h1
+          class="font-display-xl text-display-xl-mobile md:text-display-xl text-tertiary mb-stack-lg"
+          set:html={Heading}
+        />
+        <p
+          class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed"
+          set:html={Description}
+        />
+      </div>
+      <div class="md:col-span-5 aspect-[4/5] overflow-hidden image-container">
+        <img
+          class="w-full h-full object-cover image-reveal"
+          src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+          alt={alternativeText}
+        />
+      </div>
+    </div>
+  </div>
+</section>
