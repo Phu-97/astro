@@ -3,8 +3,11 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 
+import vercel from "@astrojs/vercel";
+
 export default defineConfig({
   output: "static",
+
   integrations: [
     mdx(),
     sitemap(),
@@ -12,4 +15,6 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
   ],
+
+  adapter: vercel(),
 });

@@ -17,6 +17,7 @@
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/vercel": "^10.0.8",
     "astro": "^6.4.6",
     "nodemailer": "^8.0.10",
     "qs": "^6.15.2",

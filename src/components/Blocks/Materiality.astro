@@ -4,6 +4,7 @@ const { Heading: HeadingConponent, Images, Button, SubTitle } = data;
 const { Text } = Button;
 const { Heading, Description } = HeadingConponent;
 const { url, alternativeText } = Images;
+import { getImageUrl } from "../../lib/getImageUrl";
 ---
 
 <section
@@ -44,7 +45,7 @@ const { url, alternativeText } = Images;
             <img
               class="w-full h-full object-cover image-reveal"
               data-alt="A macro close-up of high-quality white Carrara marble showing intricate grey veins and a smooth honed finish. The lighting is soft and directional, highlighting the crystalline texture of the stone. This image embodies the brand's commitment to luxury materials and timeless craftsmanship in a modern architectural context."
-              src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + Images?.[0]?.url}`}
+              src={getImageUrl(Images?.[0]?.url)}
             />
           </div>
           <div
@@ -53,7 +54,7 @@ const { url, alternativeText } = Images;
             <img
               class="w-full h-full object-cover image-reveal"
               data-alt="A macro detail shot of a rich, cream-colored bouclé fabric with a soft, nubby texture. The textile is draped elegantly, creating deep shadows and highlights that emphasize its premium quality and tactile appeal. The overall aesthetic is calm, warm, and sophisticated, consistent with a minimalist luxury interior brand."
-              src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + Images?.[1]?.url}`}
+              src={getImageUrl(Images?.[1]?.url)}
             />
           </div>
         </div>

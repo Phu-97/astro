@@ -2,7 +2,7 @@
 const { data } = Astro.props;
 
 const { SubText, Heading, Buttons, Background } = data;
-
+import { getImageUrl } from "../../lib/getImageUrl";
 // const SubText=data.SubText;
 // const Heading=data.Heading;
 // const Buttons=data.Buttons;
@@ -15,7 +15,7 @@ const { url, alternativeText } = Background;
   <img
     alt={alternativeText || "Hero Banner Background"}
     class="absolute inset-0 w-full h-full object-cover"
-    src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + url}`}
+    src={getImageUrl(url)}
   />
   <div class="absolute inset-0 hero-gradient"></div>
   <div

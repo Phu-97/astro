@@ -1,7 +1,7 @@
 ---
 const { data } = Astro.props;
 const { Heading: HeadingConponent, Image } = data;
-
+import { getImageUrl } from "../../lib/getImageUrl";
 const { Heading, Description, SubText } = HeadingConponent;
 
 const { url, alternativeText } = Image;
@@ -27,7 +27,7 @@ const { url, alternativeText } = Image;
       <div class="md:col-span-5 aspect-[4/5] overflow-hidden image-container">
         <img
           class="w-full h-full object-cover image-reveal"
-          src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + url}`}
+          src={getImageUrl(url)}
           alt={alternativeText}
         />
       </div>
