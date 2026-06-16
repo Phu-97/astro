@@ -21,7 +21,7 @@ const { Heading, Description } = HeadingConponent;
         >
           <img
             class="w-full hover:scale-105 transition-transform duration-1000 cursor-zoom-in"
-            src={`${import.meta.env.PUBLIC_STRAPI_URL}${img?.url}`}
+            src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + img?.url}`}
             alt={img?.alternativeText || `Gallery ${index + 1}`}
             loading="lazy"
           />

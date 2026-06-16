@@ -22,7 +22,7 @@ const { url, alternativeText } = Image1;
         <img
           class="w-full h-full object-cover image-reveal"
           data-alt={Image1?.alternativeText}
-          src={`${import.meta.env.PUBLIC_STRAPI_URL}${Image1?.url}`}
+          src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + Image1?.url}`}
         />
       </div>
     </div>
@@ -30,7 +30,7 @@ const { url, alternativeText } = Image1;
       <img
         class="w-full h-full object-cover image-reveal"
         data-alt={Image2?.alternativeText}
-        src={`${import.meta.env.PUBLIC_STRAPI_URL}${Image2?.url}`}
+        src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + Image2?.url}`}
       />
       <div class="absolute bottom-10 left-10 text-ivory">
         <h3 class="font-display-xl text-headline-lg">{HeadingImage}</h3>
@@ -41,7 +41,7 @@ const { url, alternativeText } = Image1;
         <img
           class="w-full h-full object-cover image-reveal"
           data-alt={Image?.alternativeText}
-          src={`${import.meta.env.PUBLIC_STRAPI_URL}${Image?.url}`}
+          src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + Image?.url}`}
         />
       </div>
       <div

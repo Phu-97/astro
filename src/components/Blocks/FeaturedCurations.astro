@@ -30,7 +30,7 @@ const otherCards = Cards.slice(1);
             <div class="relative aspect-[16/9] overflow-hidden">
               <img
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src={`${import.meta.env.PUBLIC_STRAPI_URL}${firstCard?.Image?.url}`}
+                src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + firstCard?.Image?.url}`}
                 alt={firstCard?.Image?.alternativeText || firstCard?.Title}
               />
             </div>
@@ -61,7 +61,7 @@ const otherCards = Cards.slice(1);
               <div class="relative aspect-[4/3] overflow-hidden">
                 <img
                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  src={`${import.meta.env.PUBLIC_STRAPI_URL}${card?.Image?.url}`}
+                  src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + card?.Image?.url}`}
                   alt={card?.Image?.alternativeText || card?.Title}
                 />
               </div>

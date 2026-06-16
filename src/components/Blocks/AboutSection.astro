@@ -34,7 +34,7 @@ const { url, alternativeText } = Image;
       <img
         class="w-full h-full object-cover"
         data-alt="A minimalist architectural detail of a sunlit corner in a modern luxury home, featuring a sculptural marble pedestal and a single ceramic vase against a soft beige wall. The lighting is ethereal and soft, emphasizing the clean lines and premium textures of the space."
-        src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+        src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + url}`}
       />
       <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-taupe/20 -z-10">
       </div>

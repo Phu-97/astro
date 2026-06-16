@@ -13,7 +13,7 @@ const { url, alternativeText } = Image;
         <img
           class="w-full aspect-video object-cover image-reveal"
           data-alt={alternativeText}
-          src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+          src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + url}`}
         />
       </div>
       <div class="md:w-2/5 flex flex-col justify-center py-stack-lg">

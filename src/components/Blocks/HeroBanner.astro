@@ -15,7 +15,7 @@ const { url, alternativeText } = Background;
   <img
     alt={alternativeText || "Hero Banner Background"}
     class="absolute inset-0 w-full h-full object-cover"
-    src={`${import.meta.env.PUBLIC_STRAPI_URL}${url}`}
+    src={`${url?.startsWith("http") ? url : import.meta.env.PUBLIC_STRAPI_URL + url}`}
   />
   <div class="absolute inset-0 hero-gradient"></div>
   <div
