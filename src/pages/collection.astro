@@ -14,19 +14,32 @@ import "../styles/collection.css";
 
 const category = Astro.url.searchParams.get("category");
 
-const [articlesData, collectionData] = await Promise.all([
+const [articlesResult, collectionResult] = await Promise.allSettled([
   fetchAPI("articles", getArticlesQuery(category)),
   fetchAPI("collection", getCollectionQuery()),
 ]);
 
-const articles = articlesData.data ?? [];
-const blocks = collectionData.data?.Blocks ?? [];
+const articlesData =
+  articlesResult.status === "fulfilled" ? articlesResult.value : null;
+const collectionData =
+  collectionResult.status === "fulfilled" ? collectionResult.value : null;
+
+if (articlesResult.status === "rejected") {
+  console.error("Failed to fetch articles:", articlesResult.reason);
+}
+if (collectionResult.status === "rejected") {
+  console.error("Failed to fetch collection:", collectionResult.reason);
+}
+
+const articles = articlesData?.data ?? [];
+const blocks = collectionData?.data?.Blocks ?? [];
+const seo = collectionData?.data?.seo ?? null;
 
 const getBlock = (type: string) => blocks.find((b) => b.__component === type);
-const bannerStory = getBlock("block.banner-story");
-const materiality = getBlock("block.about-section");
-const contactForm = getBlock("block.contact-form");
-const seoBlock = getBlock("shared.seo");
+const bannerStory = getBlock("blocks.banner-story");
+const materiality = getBlock("blocks.about-section");
+const contactForm = getBlock("blocks.contact-form");
+
 const categories = [
   ...new Map(
     articles.filter((a) => a.category).map((a) => [a.category.id, a.category]),
@@ -34,10 +47,7 @@ const categories = [
 ];
 ---
 
-<Layout
-  title={seoBlock?.metaTitle ?? ""}
-  description={seoBlock?.metaDescription ?? ""}
->
+<Layout title={seo?.metaTitle ?? ""} description={seo?.metaDescription ?? ""}>
   {bannerStory && <BannerCollection data={bannerStory} />}
 
   <FilterBlog />
