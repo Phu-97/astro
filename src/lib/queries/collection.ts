@@ -20,12 +20,24 @@ export const getCollectionQuery = () =>
     {
       populate: {
         Blocks: {
-          populate: "*",
-        },
-        seo: {
-          populate: {
-            shareImage: {
-              fields: ["url", "alternativeText", "width", "height"],
+          on: {
+            "block.banner-story": {
+              populate: {
+                Heading: true,
+              },
+            },
+            "block.about-section": {
+              populate: "*",
+            },
+            "block.contact-form": {
+              populate: "*",
+            },
+            "shared.seo": {
+              populate: {
+                shareImage: {
+                  fields: ["url", "alternativeText", "width", "height"],
+                },
+              },
             },
           },
         },
