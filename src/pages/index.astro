@@ -13,10 +13,8 @@ import "../styles/collection.css";
 const data = await fetchAPI("home", homeQuery);
 const blocks = data.data.Blocks;
 
-// Tách SEO ra riêng vì nó không render trên UI
 const seoBlock = blocks.find((b) => b.__component === "shared.seo");
 
-// Map component type → Astro component
 const componentMap = {
   "block.hero-banner": HeroBanner,
   "block.about-section": AboutSection,
@@ -26,7 +24,6 @@ const componentMap = {
   "block.cta": CTA,
 };
 
-// Lọc bỏ SEO, giữ nguyên thứ tự từ Strapi
 const renderableBlocks = blocks.filter((b) => b.__component !== "shared.seo");
 ---
 

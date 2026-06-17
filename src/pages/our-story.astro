@@ -14,7 +14,6 @@ const blocks = data.data.Blocks;
 
 const seoBlock = blocks.find((b) => b.__component === "shared.seo");
 
-// Đếm số lần xuất hiện của mỗi type để phân biệt block trùng type
 const typeCountMap: Record<string, number> = {};
 
 const renderableBlocks = blocks
@@ -25,12 +24,10 @@ const renderableBlocks = blocks
     return { ...block, _index: typeCountMap[type] - 1 }; // _index: 0, 1, 2...
   });
 
-// Map: [type, index] → Component
-// index = 0 là lần xuất hiện đầu tiên, 1 là lần thứ hai...
 const componentMap: Record<string, Record<number, any>> = {
   "block.banner-story": {
-    0: BannerStory, // lần 1 → BannerStory
-    1: Heritage, // lần 2 → Heritage
+    0: BannerStory,
+    1: Heritage,
   },
   "block.about-section": { 0: Materiality },
   "block.slogent": { 0: Slogent },
