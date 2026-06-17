@@ -66,9 +66,7 @@ const STRAPI_TOKEN = import.meta.env.STRAPI_TOKEN ?? "";
 
   // ─── Build a product card ───────────────────────────────────────────────
   function buildCard(article) {
-    const imgUrl = article.cover?.url
-      ? `${STRAPI_URL}${article.cover.url}`
-      : null;
+    const imgUrl = article.cover?.url ? `${article.cover.url}` : null;
     const div = document.createElement("div");
     div.className = "group product-card";
     div.dataset.category = article.category?.slug ?? "";
