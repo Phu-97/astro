@@ -1,6 +1,7 @@
 ---
-import { getImageUrl } from "../../lib/getImageUrl";
-const STRAPI_URL = "https://effortless-candy-49d1284ab1.strapiapp.com";
+const STRAPI_URL =
+  import.meta.env.STRAPI_URL ??
+  "https://effortless-candy-49d1284ab1.strapiapp.com";
 ---
 
 <!-- Filter Bar -->
@@ -77,7 +78,7 @@ const STRAPI_URL = "https://effortless-candy-49d1284ab1.strapiapp.com";
           imgUrl
             ? `<img
                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-               src="${getImageUrl(url)}"
+               src="${imgUrl}"
                alt="${article.title ?? ""}"
              />`
             : ""
