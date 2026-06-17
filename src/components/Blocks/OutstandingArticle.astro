@@ -53,7 +53,7 @@ try {
     fetchError = `Strapi trả về ${res.status}: ${res.statusText}`;
   } else {
     const json = await res.json();
-    // Strapi v5: json.data là mảng object phẳng (không có .attributes)
+   
     articles = (json.data ?? []).map((item: any): Article => ({
       id:          item.id,
       documentId:  item.documentId,
