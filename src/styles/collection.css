@@ -34,7 +34,7 @@ a.menu:hover {
   color: #d3aa6f !important;
   border-bottom: 2px solid #d3aa6f;
 }
-.nav .active {
+.menu.active {
   color: #d3aa6f !important;
   border-bottom: 2px solid #d3aa6f;
 }
