@@ -5,8 +5,7 @@
       .md\:col-start-2 {
         grid-column: span 5 / span 5 !important;
         h2 {
-          font-size: 80px;
-          line-height: 96px;
+          line-height: 120%;
           letter-spacing: -0.02em;
           font-weight: 400;
         }
@@ -27,8 +26,22 @@ input:focus-visible {
 input {
   padding: 10px;
 }
-@media screen and (max-width: 767px) {
-  .hero-banner {
-    height: 30vh !important;
-  }
+a.menu {
+  transition: 0.5s;
+  border-bottom: 2px solid transparent;
+}
+a.menu:hover {
+  color: #d3aa6f !important;
+  border-bottom: 2px solid #d3aa6f;
+}
+.menu.active {
+  color: #d3aa6f !important;
+  border-bottom: 2px solid #d3aa6f;
+}
+.hero-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(22, 22, 22, 0.1) 0%,
+    rgba(22, 22, 22, 0.4) 100%
+  );
 }

@@ -1,0 +1,66 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { marked } from "marked";
+
+// build static pages
+export async function getStaticPaths() {
+  const res = await fetch("http://localhost:1337/api/articles");
+  const json = await res.json();
+
+  return json.data.map((article) => ({
+    params: {
+      slug: article.slug,
+    },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// fetch article detail
+const res = await fetch(
+  `http://localhost:1337/api/articles?filters[slug][$eq]=${slug}&populate=*`,
+);
+
+const json = await res.json();
+const article = json.data?.[0];
+
+if (!article) {
+  return Astro.redirect("/404");
+}
+
+// parse markdown sau khi article đã có data
+const htmlContent = marked(article.content || "");
+---
+
+<Layout title={article.title} description={article.description}>
+  <section class="max-w-[1200px] mx-auto py-20">
+    <!-- Cover -->
+    {
+      article.cover?.url && (
+        <img
+          src={`http://localhost:1337${article.cover.url}`}
+          alt={article.title}
+          class="w-full h-[500px] object-cover mb-10"
+        />
+      )
+    }
+
+    <!-- Title -->
+    <h1 class="text-5xl mb-6">
+      {article.title}
+    </h1>
+
+    <!-- Category -->
+    <p class="mb-8 opacity-70">
+      {article.category?.name}
+    </p>
+
+    <!-- Description -->
+    <p class="text-xl mb-10">
+      {article.description}
+    </p>
+
+    <!-- Content -->
+    <article class="prose max-w-none" set:html={htmlContent} />
+  </section>
+</Layout>

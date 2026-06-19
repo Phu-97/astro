@@ -1,8 +1,7 @@
 ---
-import { SITE_TITLE } from "../consts";
 import Navbar from "../layouts/Navbar.astro";
+const currentPath = Astro.url.pathname;
 const strapiBase = import.meta.env.PUBLIC_STRAPI_URL;
-const { title, description } = Astro.props;
 const res = await fetch(
   `${strapiBase}/api/global?populate[defaultSeo][populate]=shareImage&populate[Blocks][populate]=*`,
 );
@@ -12,7 +11,7 @@ const headerBlock = json.data?.Blocks?.find(
 );
 const logo = headerBlock?.Logo;
 const menu = headerBlock?.Menu ?? [];
-const button = headerBlock.Button ?? [];
+const button = headerBlock?.Button ?? [];
 ---
 
 <header
@@ -21,6 +20,47 @@ const button = headerBlock.Button ?? [];
   <nav
     class="flex justify-between items-center px-grid-margin-desktop py-stack-md max-w-[1440px] mx-auto"
   >
-    <Navbar logo={logo} menu={menu} button={button} />
+    <Navbar logo={logo} menu={menu} button={button} currentPath={currentPath} />
   </nav>
+
+  <!-- Mobile Menu nằm NGOÀI nav, trong header -->
+  <div
+    id="mobile-menu"
+    class="hidden w-full bg-ivory border-t border-outline-variant/30 lg:hidden"
+  >
+    <div class="flex flex-col p-6 gap-4">
+      {
+        menu.map((item: any) => {
+          const href = item.Link ?? item.URL ?? item.link ?? "#";
+          return (
+            <a
+              href={href}
+              class="uppercase tracking-widest py-2 border-b border-outline-variant/30"
+            >
+              {item.Text}
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
 </header>
+<!-- Cuối file Header.astro, trước </header> -->
+<script>
+  function initMenu() {
+    const toggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    toggle?.addEventListener("click", () => {
+      mobileMenu?.classList.toggle("hidden");
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMenu);
+  } else {
+    initMenu();
+  }
+
+  document.addEventListener("astro:page-load", initMenu);
+</script>

@@ -11,7 +11,9 @@ import { getImageUrl } from "../../lib/getImageUrl";
 const { url, alternativeText } = Background;
 ---
 
-<section class="relative h-[100vh] w-full overflow-hidden hero-banner">
+<section
+  class="relative h-[100vh] md:h-[30vh] w-full overflow-hidden hero-banner"
+>
   <img
     alt={alternativeText || "Hero Banner Background"}
     class="absolute inset-0 w-full h-full object-cover"

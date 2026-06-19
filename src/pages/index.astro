@@ -38,3 +38,20 @@ const renderableBlocks = blocks.filter((b) => b.__component !== "shared.seo");
     })
   }
 </Layout>
+<style is:global>
+  @import "@fancyapps/ui/dist/fancybox/fancybox.css";
+</style>
+
+<script>
+  import { Fancybox } from "@fancyapps/ui";
+
+  // Chạy sau khi DOM sẵn sàng
+  document.addEventListener("DOMContentLoaded", () => {
+    Fancybox.bind("[data-fancybox]", {});
+  });
+
+  // Nếu dùng Astro View Transitions
+  document.addEventListener("astro:page-load", () => {
+    Fancybox.bind("[data-fancybox]", {});
+  });
+</script>

@@ -8,7 +8,7 @@ import Heritage from "../components/Blocks/Heritage.astro";
 import StructuralPoise from "../components/Blocks/StructuralPoise.astro";
 import { fetchAPI } from "../lib/strapi";
 import { ourStoryQuery } from "../lib/queries/ourStory";
-
+import "../styles/collection.css";
 const data = await fetchAPI("our-story", ourStoryQuery);
 const blocks = data.data.Blocks;
 

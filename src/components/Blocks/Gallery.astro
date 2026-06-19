@@ -6,7 +6,7 @@ import { getImageUrl } from "../../lib/getImageUrl";
 ---
 
 <section
-  class="py-section-gap-lg px-grid-margin-desktop max-w-[1440px] mx-auto"
+  class="px-grid-margin-desktop max-w-[1440px] mx-auto gallery py-0 lg:py-section-gap-lg"
 >
   <h2
     class="font-display-xl text-headline-lg text-tertiary mb-section-gap-md text-center"
@@ -20,12 +20,14 @@ import { getImageUrl } from "../../lib/getImageUrl";
           class="mb-8 reveal-up overflow-hidden break-inside-avoid"
           style={`transition-delay:${index * 100}ms`}
         >
-          <img
-            class="w-full hover:scale-105 transition-transform duration-1000 cursor-zoom-in"
-            src={getImageUrl(img?.url)}
-            alt={img?.alternativeText || `Gallery ${index + 1}`}
-            loading="lazy"
-          />
+          <a href={getImageUrl(img?.url)} data-fancybox="gallery">
+            <img
+              class="w-full hover:scale-105 transition-transform duration-1000 cursor-zoom-in"
+              src={getImageUrl(img?.url)}
+              alt={img?.alternativeText || `Gallery ${index + 1}`}
+              loading="lazy"
+            />
+          </a>
         </div>
       ))
     }

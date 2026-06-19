@@ -11,14 +11,14 @@ import { getImageUrl } from "../../lib/getImageUrl";
   class="bg-surface-container-low py-section-gap-lg overflow-hidden m-100"
 >
   <div class="max-w-[1440px] mx-auto px-grid-margin-desktop">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter sm:grid-cols-6">
       <div class="md:col-start-2 md:col-span-4 self-center order-2 md:order-1">
         <span
           class="font-label-caps text-label-caps uppercase text-on-surface-variant block mb-6"
           >{SubTitle}</span
         >
         <h2
-          class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-tertiary mb-stack-lg"
+          class="font-display-xl text-display-xl-mobile lg:text-display-xl md:text-display-sm text-tertiary mb-stack-lg"
           set:html={Heading}
         />
         <p
@@ -38,9 +38,9 @@ import { getImageUrl } from "../../lib/getImageUrl";
         </div>
       </div>
       <div
-        class="md:col-start-7 md:col-span-5 order-1 md:order-2 mb-stack-lg md:mb-0"
+        class="md:col-start-7 md:col-span-5 order-1 md:order-2 mb-stack-lg md:mt-20 sm:mt-0"
       >
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="aspect-[1/1] overflow-hidden image-container">
             <img
               class="w-full h-full object-cover image-reveal"

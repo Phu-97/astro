@@ -1,5 +1,5 @@
 ---
-const { logo, menu, button = [] } = Astro.props;
+const { logo, menu, button, currentPath = "/" } = Astro.props;
 ---
 
 <div class="flex items-center gap-stack-lg">
@@ -11,19 +11,27 @@ const { logo, menu, button = [] } = Astro.props;
   </a>
 </div>
 
-<div class="hidden md:flex items-center gap-10">
+<!-- Desktop menu -->
+<div class="sm:hidden lg:flex items-center gap-10">
   {
-    menu.map((item: any) => (
-      <a
-        class="font-body-md text-body-md tracking-widest uppercase text-on-surface-variant hover:text-tertiary transition-colors duration-500"
-        href={item.Link ?? item.URL ?? item.link ?? "#"}
-      >
-        {item.Text}
-      </a>
-    ))
+    menu.map((item: any) => {
+      const href = item.Link ?? item.URL ?? item.link ?? "#";
+      const isActive =
+        href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+
+      return (
+        <a
+          href={href}
+          class={`font-body-md text-body-md tracking-widest uppercase text-on-surface-variant hover:text-tertiary transition-colors duration-500 ${isActive ? "active" : "menu"}`}
+        >
+          {item.Text}
+        </a>
+      );
+    })
   }
 </div>
 
+<!-- Right section -->
 <div class="flex items-center gap-stack-md">
   {
     button.map((btn: any) => (
@@ -37,7 +45,9 @@ const { logo, menu, button = [] } = Astro.props;
       </a>
     ))
   }
-  <button class="md:hidden p-2">
+
+  <!-- Hamburger -->
+  <button id="menu-toggle" class="lg:hidden p-2">
     <span class="material-symbols-outlined">menu</span>
   </button>
 </div>

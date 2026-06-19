@@ -40,7 +40,7 @@ const categories = [
 >
   {bannerStory && <BannerCollection data={bannerStory} />}
 
-  <FilterBlog />
+  <FilterBlog articles={articles} categories={categories} client:load />
 
   {materiality && <Materiality data={materiality} />}
 
