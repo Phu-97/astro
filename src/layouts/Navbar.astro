@@ -22,7 +22,7 @@ const { logo, menu, button, currentPath = "/" } = Astro.props;
       return (
         <a
           href={href}
-          class={`font-body-md text-body-md tracking-widest uppercase text-on-surface-variant hover:text-tertiary transition-colors duration-500 ${isActive ? "active" : "menu"}`}
+          class={`font-body-md menu text-body-md tracking-widest uppercase text-on-surface-variant hover:text-tertiary transition-colors duration-500 ${isActive ? "active" : ""}`}
         >
           {item.Text}
         </a>
