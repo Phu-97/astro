@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+
 import { marked } from "marked";
 const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
 // build static pages
@@ -64,3 +65,17 @@ const htmlContent = marked(article.content || "");
     <article class="prose max-w-none" set:html={htmlContent} />
   </section>
 </Layout>
+<style>
+  a.menu {
+    transition: 0.5s;
+    border-bottom: 2px solid transparent;
+  }
+  a.menu:hover {
+    color: #d3aa6f !important;
+    border-bottom: 2px solid #d3aa6f;
+  }
+  .menu.active {
+    color: #d3aa6f !important;
+    border-bottom: 2px solid #d3aa6f;
+  }
+</style>
