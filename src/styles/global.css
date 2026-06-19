@@ -3,3 +3,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+a.menu {
+  transition: 0.5s;
+  border-bottom: 2px solid transparent;
+}
+a.menu:hover {
+  color: #d3aa6f !important;
+  border-bottom: 2px solid #d3aa6f;
+}
+.menu.active {
+  color: #d3aa6f !important;
+  border-bottom: 2px solid #d3aa6f;
+}
